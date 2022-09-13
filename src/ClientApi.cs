@@ -289,7 +289,7 @@ namespace MetaFrm.Service
                 serviceInfo.HttpClient.DefaultRequestHeaders.Add("token", Factory.AccessKey);
                 serviceInfo.HttpClient.DefaultRequestHeaders.Add("accessGroup", "JOIN");
 
-                return serviceInfo.HttpClient.GetStringAsync($"api/AccessCode?email={email}").Result.AesDecryptorToBase64String("MetaFrm", Factory.AccessKey);
+                return serviceInfo.HttpClient.GetStringAsync($"api/AccessCode?email={email}").Result.AesDecryptorToBase64String(Factory.AccessKey, "MetaFrm");
             }
             catch (Exception exception)
             {
@@ -321,7 +321,7 @@ namespace MetaFrm.Service
                 serviceInfo.HttpClient.DefaultRequestHeaders.Add("accessGroup", "JOIN");
 
                 accessCode = await serviceInfo.HttpClient.GetStringAsync($"api/AccessCode?email={email}&accessGroup=JOIN");
-                return accessCode.AesDecryptorToBase64String("MetaFrm", Factory.AccessKey);
+                return accessCode.AesDecryptorToBase64String(Factory.AccessKey, "MetaFrm");
             }
             catch (Exception exception)
             {
@@ -352,7 +352,7 @@ namespace MetaFrm.Service
                 serviceInfo.HttpClient.DefaultRequestHeaders.Add("token", token);
                 serviceInfo.HttpClient.DefaultRequestHeaders.Add("accessGroup", accessGroup);
 
-                return serviceInfo.HttpClient.GetStringAsync($"api/AccessCode?email={email}").Result.AesDecryptorToBase64String("MetaFrm", token);
+                return serviceInfo.HttpClient.GetStringAsync($"api/AccessCode?email={email}").Result.AesDecryptorToBase64String(token, "MetaFrm");
             }
             catch (Exception exception)
             {
@@ -384,7 +384,7 @@ namespace MetaFrm.Service
                 serviceInfo.HttpClient.DefaultRequestHeaders.Add("accessGroup", accessGroup);
 
                 accessCode = await serviceInfo.HttpClient.GetStringAsync($"api/AccessCode?email={email}");
-                return accessCode.AesDecryptorToBase64String("MetaFrm", token);
+                return accessCode.AesDecryptorToBase64String(token, "MetaFrm");
             }
             catch (Exception exception)
             {
