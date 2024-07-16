@@ -15,14 +15,14 @@ namespace MetaFrm.Service
         private readonly int servicePoolMaxCount;
         private int tryConnectCount;
         private readonly Uri BaseAddress;
-        JsonSerializerOptions JsonSerializerOptions;
+        private readonly JsonSerializerOptions JsonSerializerOptions;
 
         /// <summary>
         /// ClientApi 생성자
         /// </summary>
         public ClientApi()
         {
-            this.listServicePool = new List<ServiceInfo>();
+            this.listServicePool = new();
             this.tryConnectCount = 0;
 
             try
@@ -183,7 +183,7 @@ namespace MetaFrm.Service
                 serviceInfo = this.GetService();
                 serviceInfo.IsBusy = true;
 
-                var values = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(nameof(email), email), new KeyValuePair<string, string>(nameof(password), password) };
+                var values = new List<KeyValuePair<string, string>> { new(nameof(email), email), new(nameof(password), password) };
 
                 serviceInfo.HttpClient.DefaultRequestHeaders.Accept.Clear();
                 serviceInfo.HttpClient.DefaultRequestHeaders.Clear();
@@ -233,7 +233,7 @@ namespace MetaFrm.Service
                 serviceInfo = this.GetService();
                 serviceInfo.IsBusy = true;
 
-                var values = new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(nameof(email), email), new KeyValuePair<string, string>(nameof(password), password) };
+                var values = new List<KeyValuePair<string, string>> { new(nameof(email), email), new(nameof(password), password) };
 
                 serviceInfo.HttpClient.DefaultRequestHeaders.Accept.Clear();
                 serviceInfo.HttpClient.DefaultRequestHeaders.Clear();
