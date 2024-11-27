@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetaFrm.Service.ClientApi(net6.0)", "MetaFrm.Service.ClientApi(net6.0)\MetaFrm.Service.ClientApi(net6.0).csproj", "{F1217E58-F9E4-4F2D-AF14-0D3D54ACD77F}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{629DD38E-D0D2-418E-8171-262FD10A834B}"
 	ProjectSection(SolutionItems) = preProject
 		src\ClientApi.cs = src\ClientApi.cs
@@ -15,9 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{595B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{73EC7043-0731-4906-9C6A-5AB62BFDEE77}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\build_6.0.yml = .github\workflows\build_6.0.yml
-		.github\workflows\build_7.0.yml = .github\workflows\build_7.0.yml
 		.github\workflows\build_8.0.yml = .github\workflows\build_8.0.yml
+		.github\workflows\build_9.0.yml = .github\workflows\build_9.0.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루션 항목", "{0FF55E53-4DC2-49BE-A6A7-9C58FF9F7DC4}"
@@ -27,9 +24,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루�
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetaFrm.Service.ClientApi(net7.0)", "MetaFrm.Service.ClientApi(net7.0)\MetaFrm.Service.ClientApi(net7.0).csproj", "{EA3BEB9E-C339-4E7D-8675-AAC7E75FA80F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetaFrm.Service.ClientApi(net8.0)", "MetaFrm.Service.ClientApi(net8.0)\MetaFrm.Service.ClientApi(net8.0).csproj", "{1B5F7666-C2BB-4A6B-9991-4C3ACC2CDA00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaFrm.Service.ClientApi(net9.0)", "MetaFrm.Service.ClientApi(net9.0)\MetaFrm.Service.ClientApi(net9.0).csproj", "{10A1814A-F70D-42AA-8AE2-B710CB743EB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,18 +34,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F1217E58-F9E4-4F2D-AF14-0D3D54ACD77F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F1217E58-F9E4-4F2D-AF14-0D3D54ACD77F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F1217E58-F9E4-4F2D-AF14-0D3D54ACD77F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F1217E58-F9E4-4F2D-AF14-0D3D54ACD77F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EA3BEB9E-C339-4E7D-8675-AAC7E75FA80F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA3BEB9E-C339-4E7D-8675-AAC7E75FA80F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA3BEB9E-C339-4E7D-8675-AAC7E75FA80F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA3BEB9E-C339-4E7D-8675-AAC7E75FA80F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1B5F7666-C2BB-4A6B-9991-4C3ACC2CDA00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1B5F7666-C2BB-4A6B-9991-4C3ACC2CDA00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B5F7666-C2BB-4A6B-9991-4C3ACC2CDA00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B5F7666-C2BB-4A6B-9991-4C3ACC2CDA00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10A1814A-F70D-42AA-8AE2-B710CB743EB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10A1814A-F70D-42AA-8AE2-B710CB743EB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10A1814A-F70D-42AA-8AE2-B710CB743EB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10A1814A-F70D-42AA-8AE2-B710CB743EB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

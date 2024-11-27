@@ -37,7 +37,7 @@ namespace MetaFrm.Service
         {
             try
             {
-                HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, $"{Factory.BaseAddress}api/Service")
+                HttpRequestMessage httpRequestMessage = new(HttpMethod.Post, $"{Factory.BaseAddress}api/Service")
                 {
                     Headers = {
                         { HeaderNames.Accept, "application/json" },
@@ -55,7 +55,7 @@ namespace MetaFrm.Service
             }
             catch (Exception exception)
             {
-                Factory.Logger.LogError(exception, exception.Message, DateTime.Now.ToLongTimeString());
+                Factory.Logger.LogError(exception, "{Message}", exception.Message);
                 throw new MetaFrmException(exception);
             }
         }
@@ -64,7 +64,7 @@ namespace MetaFrm.Service
         {
             try
             {
-                HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, $"{Factory.BaseAddress}api/Service")
+                HttpRequestMessage httpRequestMessage = new(HttpMethod.Post, $"{Factory.BaseAddress}api/Service")
                 {
                     Headers = {
                         { HeaderNames.Accept, "application/json" },
@@ -82,7 +82,7 @@ namespace MetaFrm.Service
             }
             catch (Exception exception)
             {
-                Factory.Logger.LogError(exception, exception.Message, DateTime.Now.ToLongTimeString());
+                Factory.Logger.LogError(exception, "{Message}", exception.Message);
                 throw new MetaFrmException(exception);
             }
         }
@@ -97,7 +97,7 @@ namespace MetaFrm.Service
                         { HeaderNames.Accept, "application/json" },
                         { "token", Factory.AccessKey },
                     },
-                    Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>> { new(nameof(email), email), new(nameof(password), password) })
+                    Content = new FormUrlEncodedContent([new(nameof(email), email), new(nameof(password), password)])
                 };
 
                 HttpResponseMessage httpResponseMessage = Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage).Result;
@@ -109,7 +109,7 @@ namespace MetaFrm.Service
             }
             catch (Exception exception)
             {
-                Factory.Logger.LogError(exception, exception.Message, DateTime.Now.ToLongTimeString());
+                Factory.Logger.LogError(exception, "{Message}", exception.Message);
                 throw new MetaFrmException(exception);
             }
         }
@@ -123,7 +123,7 @@ namespace MetaFrm.Service
                         { HeaderNames.Accept, "application/json" },
                         { "token", Factory.AccessKey },
                     },
-                    Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>> { new(nameof(email), email), new(nameof(password), password) })
+                    Content = new FormUrlEncodedContent([new(nameof(email), email), new(nameof(password), password)])
                 };
 
                 HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage);
@@ -135,7 +135,7 @@ namespace MetaFrm.Service
             }
             catch (Exception exception)
             {
-                Factory.Logger.LogError(exception, exception.Message, DateTime.Now.ToLongTimeString());
+                Factory.Logger.LogError(exception, "{Message}", exception.Message);
                 throw new MetaFrmException(exception);
             }
         }
@@ -162,7 +162,7 @@ namespace MetaFrm.Service
             }
             catch (Exception exception)
             {
-                Factory.Logger.LogError(exception, exception.Message, DateTime.Now.ToLongTimeString());
+                Factory.Logger.LogError(exception, "{Message}", exception.Message);
                 throw new MetaFrmException(exception);
             }
         }
@@ -188,7 +188,7 @@ namespace MetaFrm.Service
             }
             catch (Exception exception)
             {
-                Factory.Logger.LogError(exception, exception.Message, DateTime.Now.ToLongTimeString());
+                Factory.Logger.LogError(exception, "{Message}", exception.Message);
                 throw new MetaFrmException(exception);
             }
         }
@@ -215,7 +215,7 @@ namespace MetaFrm.Service
             }
             catch (Exception exception)
             {
-                Factory.Logger.LogError(exception, exception.Message, DateTime.Now.ToLongTimeString());
+                Factory.Logger.LogError(exception, "{Message}", exception.Message);
                 throw new MetaFrmException(exception);
             }
         }
@@ -241,7 +241,7 @@ namespace MetaFrm.Service
             }
             catch (Exception exception)
             {
-                Factory.Logger.LogError(exception, exception.Message, DateTime.Now.ToLongTimeString());
+                Factory.Logger.LogError(exception, "{Message}", exception.Message);
                 throw new MetaFrmException(exception);
             }
         }
