@@ -51,10 +51,10 @@ namespace MetaFrm.Service
                     Content = new StringContent(JsonSerializer.Serialize(serviceData, JsonSerializerOptions), Encoding.UTF8, "application/json")
                 };
 
-                using HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage).ConfigureAwait(false);
+                using HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage);
 
                 if (httpResponseMessage.IsSuccessStatusCode)
-                    return await httpResponseMessage.Content.ReadFromJsonAsync<Response>(JsonSerializerOptions).ConfigureAwait(false) ?? new();
+                    return await httpResponseMessage.Content.ReadFromJsonAsync<Response>(JsonSerializerOptions) ?? new();
                 else
                     return new();
             }
@@ -74,7 +74,7 @@ namespace MetaFrm.Service
         {
             try
             {
-                using HttpRequestMessage httpRequestMessage = new(HttpMethod.Post, $"{Factory.BaseAddress}api/Login")
+                using HttpRequestMessage httpRequestMessage = new(HttpMethod.Post, $"{Factory.BaseAddress}api/Login?email={email}&password={password}")
                 {
                     Headers = {
                         { HeaderNames.Accept, "application/json" },
