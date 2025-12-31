@@ -35,7 +35,7 @@ namespace MetaFrm.Service
 
         Response IService.Request(ServiceData serviceData)
         {
-            return ((IServiceAsync)this).RequestAsync(serviceData).Result;
+            return Task.Run(() => ((IServiceAsync)this).RequestAsync(serviceData)).GetAwaiter().GetResult();
         }
 
         async Task<Response> IServiceAsync.RequestAsync(ServiceData serviceData)
@@ -68,7 +68,7 @@ namespace MetaFrm.Service
 
         UserInfo ILoginService.Login(string email, string password)
         {
-            return ((ILoginServiceAsync)this).LoginAsync(email, password).Result;
+            return Task.Run(() => ((ILoginServiceAsync)this).LoginAsync(email, password)).GetAwaiter().GetResult();
         }
         async Task<UserInfo> ILoginServiceAsync.LoginAsync(string email, string password)
         {
@@ -100,7 +100,7 @@ namespace MetaFrm.Service
 
         string IAccessCodeService.GetJoinAccessCode(string email)
         {
-            return ((IAccessCodeServiceAsync)this).GetJoinAccessCodeAsync(email).Result;
+            return Task.Run(() => ((IAccessCodeServiceAsync)this).GetJoinAccessCodeAsync(email)).GetAwaiter().GetResult();
         }
         async Task<string> IAccessCodeServiceAsync.GetJoinAccessCodeAsync(string email)
         {
@@ -132,7 +132,7 @@ namespace MetaFrm.Service
 
         string IAccessCodeService.GetAccessCode(string token, string email, string accessGroup)
         {
-            return ((IAccessCodeServiceAsync)this).GetAccessCodeAsync(token, email, accessGroup).Result;
+            return Task.Run(() => ((IAccessCodeServiceAsync)this).GetAccessCodeAsync(token, email, accessGroup)).GetAwaiter().GetResult();
         }
         async Task<string> IAccessCodeServiceAsync.GetAccessCodeAsync(string token, string email, string accessGroup)
         {
