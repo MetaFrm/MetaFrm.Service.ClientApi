@@ -83,10 +83,10 @@ namespace MetaFrm.Service
                     Content = JsonContent.Create(new { email, password })
                 };
 
-                using HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage);
+                using HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage).ConfigureAwait(false);
 
                 if (httpResponseMessage.IsSuccessStatusCode)
-                    return await httpResponseMessage.Content.ReadFromJsonAsync<UserInfo>() ?? new();
+                    return await httpResponseMessage.Content.ReadFromJsonAsync<UserInfo>().ConfigureAwait(false) ?? new();
                 else
                     return new();
             }
@@ -115,10 +115,10 @@ namespace MetaFrm.Service
                     }
                 };
 
-                using HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage);
+                using HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage).ConfigureAwait(false);
 
                 if (httpResponseMessage.IsSuccessStatusCode)
-                    return await (await httpResponseMessage.Content.ReadAsStringAsync()).AesDecryptorToBase64StringAsync(Factory.AccessKey, "MetaFrm");
+                    return await (await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).AesDecryptorToBase64StringAsync(Factory.AccessKey, "MetaFrm").ConfigureAwait(false);
                 else
                     return "";
             }
@@ -147,10 +147,10 @@ namespace MetaFrm.Service
                     }
                 };
 
-                using HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage);
+                using HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage).ConfigureAwait(false);
 
                 if (httpResponseMessage.IsSuccessStatusCode)
-                    return await (await httpResponseMessage.Content.ReadAsStringAsync()).AesDecryptorToBase64StringAsync(token, "MetaFrm");
+                    return await (await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).AesDecryptorToBase64StringAsync(token, "MetaFrm").ConfigureAwait(false);
                 else
                     return "";
             }
