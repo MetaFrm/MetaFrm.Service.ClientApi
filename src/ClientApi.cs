@@ -1,8 +1,10 @@
-﻿using MetaFrm.Api.Models;
+﻿using MetaFrm.Api;
+using MetaFrm.Api.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
+using System.Net.Mime;
 using System.Text.Json;
 
 namespace MetaFrm.Service
@@ -12,10 +14,6 @@ namespace MetaFrm.Service
     /// </summary>
     public class ClientApi : IService, IServiceAsync, ILoginService, ILoginServiceAsync, IAccessCodeService, IAccessCodeServiceAsync
     {
-        //private readonly List<ServiceInfo> listServicePool;
-        //private readonly int servicePoolMaxCount;
-        //private int tryConnectCount;
-        //private readonly Uri BaseAddress;
         private static readonly JsonSerializerOptions JsonSerializerOptions;
 
         static ClientApi()
@@ -42,14 +40,15 @@ namespace MetaFrm.Service
         {
             try
             {
-                using HttpRequestMessage httpRequestMessage = new(HttpMethod.Post, $"{Factory.BaseAddress}api/Service")
+                using HttpRequestMessage httpRequestMessage = new(HttpMethod.Post, $"{Factory.BaseAddress}api/{Factory.ApiVersion}/Service")
                 {
                     Headers = {
-                        { HeaderNames.Accept, "application/json" },
-                        { "token", serviceData.Token },
+                        { HeaderNames.Accept, MediaTypeNames.Application.Json },
                     },
-                    Content = new StringContent(JsonSerializer.Serialize(serviceData, JsonSerializerOptions), Encoding.UTF8, "application/json")
+                    Content = JsonContent.Create(serviceData)
                 };
+
+                httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue(Headers.Bearer, serviceData.Token);
 
                 using HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage).ConfigureAwait(false);
 
@@ -61,7 +60,8 @@ namespace MetaFrm.Service
             catch (Exception exception)
             {
                 if (Factory.Logger.IsEnabled(LogLevel.Error))
-                    Factory.Logger.LogError(exception, "{Message}", exception.Message);
+                    Factory.Logger.LogError(exception, "{serviceData}", JsonSerializer.Serialize(serviceData));
+
                 throw new MetaFrmException(exception);
             }
         }
@@ -74,14 +74,18 @@ namespace MetaFrm.Service
         {
             try
             {
-                using HttpRequestMessage httpRequestMessage = new(HttpMethod.Post, $"{Factory.BaseAddress}api/Login?email={email}&password={password}")
+                email = await email.AesEncryptToBase64StringAsync(Factory.ProjectService.Token!, Auth.AuthType.Login);
+                password = await (await password.ComputeHashAsync()).AesEncryptToBase64StringAsync(email, Factory.ProjectService.Token!);
+
+                using HttpRequestMessage httpRequestMessage = new(HttpMethod.Post, $"{Factory.BaseAddress}api/{Factory.ApiVersion}/Login")
                 {
                     Headers = {
-                        { HeaderNames.Accept, "application/json" },
-                        { "token", Factory.AccessKey },
+                        { HeaderNames.Accept, MediaTypeNames.Application.Json },
                     },
-                    Content = JsonContent.Create(new { email, password })
+                    Content = JsonContent.Create(new Login { Email = email, Password = password })
                 };
+
+                httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue(Headers.Bearer, Factory.ProjectService.Token);
 
                 using HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage).ConfigureAwait(false);
 
@@ -93,41 +97,19 @@ namespace MetaFrm.Service
             catch (Exception exception)
             {
                 if (Factory.Logger.IsEnabled(LogLevel.Error))
-                    Factory.Logger.LogError(exception, "{Message}", exception.Message);
+                    Factory.Logger.LogError(exception, "{email}", email);
+
                 throw new MetaFrmException(exception);
             }
         }
 
         string IAccessCodeService.GetJoinAccessCode(string email)
         {
-            return ((IAccessCodeServiceAsync)this).GetJoinAccessCodeAsync(email).GetAwaiter().GetResult();
+            return ((IAccessCodeServiceAsync)this).GetAccessCodeAsync(Factory.ProjectService.Token!, email, Auth.AuthType.Join).GetAwaiter().GetResult();
         }
         async Task<string> IAccessCodeServiceAsync.GetJoinAccessCodeAsync(string email)
         {
-            try
-            {
-                using HttpRequestMessage httpRequestMessage = new(HttpMethod.Get, $"{Factory.BaseAddress}api/AccessCode?email={email}")
-                {
-                    Headers = {
-                        { HeaderNames.Accept, "text/plain" },
-                        { "token", Factory.AccessKey },
-                        { "accessGroup", "JOIN" },
-                    }
-                };
-
-                using HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage).ConfigureAwait(false);
-
-                if (httpResponseMessage.IsSuccessStatusCode)
-                    return await (await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).AesDecryptorToBase64StringAsync(Factory.AccessKey, "MetaFrm").ConfigureAwait(false);
-                else
-                    return "";
-            }
-            catch (Exception exception)
-            {
-                if (Factory.Logger.IsEnabled(LogLevel.Error))
-                    Factory.Logger.LogError(exception, "{Message}", exception.Message);
-                throw new MetaFrmException(exception);
-            }
+            return await ((IAccessCodeServiceAsync)this).GetAccessCodeAsync(Factory.ProjectService.Token!, email, Auth.AuthType.Join).ConfigureAwait(false);
         }
 
         string IAccessCodeService.GetAccessCode(string token, string email, string accessGroup)
@@ -138,26 +120,38 @@ namespace MetaFrm.Service
         {
             try
             {
-                using HttpRequestMessage httpRequestMessage = new(HttpMethod.Get, $"{Factory.BaseAddress}api/AccessCode?email={email}")
+                email = email.AesEncryptToBase64String(token, accessGroup);
+
+                using HttpRequestMessage httpRequestMessage = new(HttpMethod.Post, $"{Factory.BaseAddress}api/{Factory.ApiVersion}/AccessCode")
                 {
                     Headers = {
-                        { HeaderNames.Accept, "text/plain" },
-                        { "token", token },
-                        { "accessGroup", accessGroup },
-                    }
+                        { HeaderNames.Accept, MediaTypeNames.Application.Json },
+                        { Headers.AccessGroup, accessGroup },
+                    },
+                    Content = JsonContent.Create(email)
                 };
+
+                httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue(Headers.Bearer, token);
 
                 using HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage).ConfigureAwait(false);
 
                 if (httpResponseMessage.IsSuccessStatusCode)
-                    return await (await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).AesDecryptorToBase64StringAsync(token, "MetaFrm").ConfigureAwait(false);
+                {
+                    var accessCode = await httpResponseMessage.Content.ReadFromJsonAsync<string>().ConfigureAwait(false);
+
+                    if (accessCode != null)
+                        return await accessCode.AesDecryptorToBase64StringAsync(token, accessGroup).ConfigureAwait(false);
+                    else
+                        return "";
+                }
                 else
                     return "";
             }
             catch (Exception exception)
             {
                 if (Factory.Logger.IsEnabled(LogLevel.Error))
-                    Factory.Logger.LogError(exception, "{Message}", exception.Message);
+                    Factory.Logger.LogError(exception, "{token}, {email}, {accessGroup}", token, email, accessGroup);
+
                 throw new MetaFrmException(exception);
             }
         }
