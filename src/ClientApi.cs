@@ -48,7 +48,7 @@ namespace MetaFrm.Service
                     Content = JsonContent.Create(serviceData)
                 };
 
-                httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue(Headers.Bearer, serviceData.Token);
+                httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue(Headers.Bearer, Factory.AccessKey == serviceData.Token ? Factory.ProjectService.Token : serviceData.Token);
 
                 using HttpResponseMessage httpResponseMessage = await Factory.HttpClientFactory.CreateClient().SendAsync(httpRequestMessage).ConfigureAwait(false);
 
